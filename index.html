@@ -35,6 +35,18 @@ footer{background:#111820;color:#fff;padding:36px 0}.footer-grid{display:grid;gr
 @media(max-width:900px){.nav{display:none}.grid6{grid-template-columns:repeat(3,1fr)}.grid5{grid-template-columns:repeat(2,1fr)}.selector{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}.hero{min-height:600px}}
 @media(max-width:560px){.container{width:calc(100% - 22px)}.contact{display:none}.hero-content{padding:60px 0}h1{font-size:42px}.hero p{font-size:15px}.grid6{grid-template-columns:repeat(2,1fr);gap:9px}.grid5{gap:9px}.card img{height:100px}.card-body{padding:9px}.card-body b{font-size:12px}.cta{padding:26px;display:block}.cta h2{font-size:28px}.steps{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:1fr}}
 </style>
+
+<style>
+/* K-Roof category gallery and in-page detail */
+.manage-fab{position:fixed;left:18px;bottom:18px;z-index:1000;background:#17212b;color:#fff;border:0;border-radius:999px;padding:13px 18px;font-weight:800;box-shadow:0 6px 24px #0003;cursor:pointer}
+.card{cursor:pointer}.card:focus{outline:3px solid #d71920;outline-offset:3px}
+#krManage,#krDetail{display:none;position:fixed;inset:0;z-index:2000;background:#0009;align-items:center;justify-content:center;padding:16px}
+.kr-modal{background:white;border-radius:18px;padding:22px;width:min(760px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 70px #0004}
+.kr-modal h2{margin:0 0 14px}.kr-close{float:right;border:0;background:#eee;border-radius:50%;width:36px;height:36px;font-size:22px;cursor:pointer}
+.kr-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.kr-form label{font-size:13px;font-weight:700;display:block}.kr-form input,.kr-form select,.kr-form textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:9px;margin-top:5px;font:inherit}.kr-form textarea{min-height:75px}.kr-wide{grid-column:1/-1}.kr-action{border:0;border-radius:9px;padding:11px 16px;background:#d71920;color:#fff;font-weight:800;cursor:pointer}.kr-secondary{border:0;border-radius:9px;padding:10px 14px;background:#eee;cursor:pointer;font-weight:700}.kr-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:16px}.kr-gallery img{width:100%;height:140px;object-fit:cover;border-radius:10px}.kr-gallery figure{margin:0}.kr-gallery figcaption{font-size:13px;padding:5px}.kr-detail-main{width:100%;max-height:55vh;object-fit:contain;background:#f5f5f5;border-radius:12px}.kr-hint{color:#69717b;font-size:13px}.kr-newcard{border:1px dashed #aaa;border-radius:14px;padding:10px;text-align:center;background:#fff;cursor:pointer}.kr-newcard img{width:100%;height:170px;object-fit:cover;border-radius:9px}
+@media(max-width:600px){.kr-form{grid-template-columns:1fr}.kr-wide{grid-column:auto}.manage-fab{left:10px;bottom:10px}}
+</style>
+
 </head>
 <body>
 <header class="topbar"><div class="container top-inner">
@@ -104,6 +116,14 @@ footer{background:#111820;color:#fff;padding:36px 0}.footer-grid{display:grid;gr
 <div><b>ติดต่อ</b><p class="small">095-598-2324<br>061-616-4193<br>LINE: @boonchot_shop</p></div>
 <div><b>เมนู</b><p class="small"><a href="#count">จำนวนรถ</a><br><a href="#structure">โครงสร้าง</a><br><a href="#material">วัสดุ</a><br><a href="#work">ผลงาน</a></p></div></div></footer>
 <div class="floating"><a class="btn green" href="https://line.me/ti/p/@boonchot_shop">LINE</a><a class="btn red" href="tel:0955982324">โทร</a></div>
+
+<button class="manage-fab" type="button" onclick="krOpenManage()">＋ เพิ่มรูป / จัดการหัวข้อ</button>
+<div id="krManage" role="dialog" aria-modal="true"><div class="kr-modal"><button class="kr-close" onclick="krClose('krManage')" aria-label="ปิด">×</button><h2>จัดการหัวข้อและรูปภาพ</h2><p class="kr-hint">เลือกรูปได้หลายรูป ระบบจะแสดงรูปในหัวข้อที่เลือกและเก็บไว้ในเบราว์เซอร์เครื่องนี้</p>
+<form id="krAddForm" class="kr-form"><label>หัวข้อที่ต้องการเพิ่มรูป<select id="krCategory" required></select></label><label>ชื่อรูป / ชื่อแบบ<input id="krCaption" placeholder="เช่น โรงจอดรถ 3 คัน"></label><label class="kr-wide">เลือกรูปภาพ (เลือกได้หลายรูป)<input id="krImages" type="file" accept="image/*" multiple required></label><label class="kr-wide">รายละเอียดเพิ่มเติม<textarea id="krDescription" placeholder="ขนาด วัสดุ ราคา หรือรายละเอียดงาน"></textarea></label><div class="kr-wide"><button class="kr-action" type="submit">บันทึกรูปในหัวข้อนี้</button> <button class="kr-secondary" type="button" onclick="krShowNewCategory()">＋ สร้างหัวข้อใหม่</button></div></form>
+<div id="krNewCategory" style="display:none;margin-top:16px;padding:14px;background:#f7f5f1;border-radius:12px"><b>สร้างหัวข้อใหม่</b><div class="kr-form" style="margin-top:10px"><label>ชื่อหัวข้อ<input id="krNewTitle" placeholder="เช่น กันสาดหน้าบ้าน"></label><label>คำอธิบาย<input id="krNewDesc" placeholder="รายละเอียดสั้น ๆ"></label><div class="kr-wide"><button class="kr-action" type="button" onclick="krCreateCategory()">สร้างหัวข้อ</button></div></div></div>
+<p class="kr-hint" id="krManageStatus" aria-live="polite"></p></div></div>
+<div id="krDetail" role="dialog" aria-modal="true"><div class="kr-modal"><button class="kr-close" onclick="krClose('krDetail')" aria-label="ปิด">×</button><h2 id="krDetailTitle">รายละเอียด</h2><img id="krDetailImage" class="kr-detail-main" alt=""><p id="krDetailDescription"></p><div id="krDetailGallery" class="kr-gallery"></div><p><button class="kr-action" onclick="krOpenManage()">＋ เพิ่มรูปในหัวข้อนี้</button> <button class="kr-secondary" onclick="krClose('krDetail')">ปิด</button></p></div></div>
+
 <script>
 document.querySelectorAll(".pills").forEach(group=>{
   group.querySelectorAll(".pill").forEach(btn=>{
@@ -113,5 +133,30 @@ document.querySelectorAll(".pills").forEach(group=>{
     });
   });
 });
+
+const krDefaultCategories = [
+ {id:'count',title:'จำนวนรถ',desc:'เลือกแบบโรงจอดรถตามจำนวนรถ'},
+ {id:'structure',title:'โครงสร้าง',desc:'รูปแบบโครงสร้างโรงจอดรถ'},
+ {id:'material',title:'วัสดุหลังคา',desc:'ตัวเลือกวัสดุมุงหลังคา'},
+ {id:'work',title:'ผลงาน',desc:'ภาพผลงานติดตั้งจริง'},
+ {id:'other',title:'งานโปรเจกต์',desc:'ผลงานและแบบอื่น ๆ'}
+];
+let krCurrentCategory='count';
+function krGetData(){try{return JSON.parse(localStorage.getItem('kroof_gallery_v1')||'{"categories":[],"items":[]}')}catch(e){return {categories:[],items:[]}}}
+function krSaveData(d){try{localStorage.setItem('kroof_gallery_v1',JSON.stringify(d));return true}catch(e){document.getElementById('krManageStatus').textContent='พื้นที่เก็บข้อมูลไม่พอ รูปอาจมีขนาดใหญ่เกินไป กรุณาลดขนาดรูปแล้วลองใหม่';return false}}
+function krAllCategories(){let d=krGetData();return krDefaultCategories.concat(d.categories||[])}
+function krRefreshCategorySelect(){let sel=document.getElementById('krCategory');sel.innerHTML='';krAllCategories().forEach(c=>{let o=document.createElement('option');o.value=c.id;o.textContent=c.title;sel.appendChild(o)});sel.value=krCurrentCategory||'count'}
+function krOpenManage(){document.getElementById('krManage').style.display='flex';document.getElementById('krDetail').style.display='none';krRefreshCategorySelect()}
+function krClose(id){document.getElementById(id).style.display='none'}
+function krShowNewCategory(){document.getElementById('krNewCategory').style.display='block'}
+function krCreateCategory(){let title=document.getElementById('krNewTitle').value.trim();if(!title){alert('กรุณาใส่ชื่อหัวข้อ');return}let d=krGetData();let id='custom_'+Date.now();d.categories.push({id,title,desc:document.getElementById('krNewDesc').value.trim()});if(krSaveData(d)){krCurrentCategory=id;krRefreshCategorySelect();document.getElementById('krCategory').value=id;document.getElementById('krNewTitle').value='';document.getElementById('krNewDesc').value='';document.getElementById('krManageStatus').textContent='สร้างหัวข้อ “'+title+'” แล้ว'} }
+function krAddStoredCards(){let d=krGetData();(d.categories||[]).forEach(c=>{let section=document.getElementById(c.id);if(!section){section=document.createElement('section');section.className='section';section.id=c.id;section.innerHTML='<div class="container"><div class="heading"><h2></h2><p></p></div><div class="cards kr-custom-cards"></div></div>';let before=document.getElementById('process');before.parentNode.insertBefore(section,before);}
+let h=section.querySelector('.heading h2');if(h)h.textContent=c.title;let p=section.querySelector('.heading p');if(p)p.textContent=c.desc||'เลือกรูปเพื่อดูรายละเอียด';let grid=section.querySelector('.kr-custom-cards');if(!grid){grid=document.createElement('div');grid.className='cards kr-custom-cards';section.querySelector('.container').appendChild(grid)}grid.innerHTML='';(d.items||[]).filter(i=>i.category===c.id).forEach(i=>{let card=document.createElement('article');card.className='card';card.tabIndex=0;let img=document.createElement('img');img.src=i.image;img.alt=i.caption||c.title;let body=document.createElement('div');body.className='card-body';let b=document.createElement('b');b.textContent=i.caption||c.title;let span=document.createElement('span');span.textContent='ดูรายละเอียด';body.append(b,span);card.append(img,body);card.onclick=()=>krOpenDetail(c.id,i.id);card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();krOpenDetail(c.id,i.id)}};grid.appendChild(card)})});
+}
+function krOpenDetail(category,id){krCurrentCategory=category;let c=krAllCategories().find(x=>x.id===category)||{title:'รายละเอียด',desc:''};let d=krGetData();let items=(d.items||[]).filter(i=>i.category===category);let selected=items.find(i=>i.id===id)||items[0];document.getElementById('krDetailTitle').textContent=selected?(selected.caption||c.title):c.title;document.getElementById('krDetailDescription').textContent=(selected&&selected.description)||c.desc||'';let main=document.getElementById('krDetailImage');main.style.display=selected?'block':'none';if(selected)main.src=selected.image;let gallery=document.getElementById('krDetailGallery');gallery.innerHTML='';items.forEach(i=>{let fig=document.createElement('figure');let im=document.createElement('img');im.src=i.image;im.alt=i.caption||c.title;im.style.cursor='pointer';im.onclick=()=>{main.src=i.image;document.getElementById('krDetailTitle').textContent=i.caption||c.title;document.getElementById('krDetailDescription').textContent=i.description||c.desc||''};let cap=document.createElement('figcaption');cap.textContent=i.caption||c.title;fig.append(im,cap);gallery.appendChild(fig)});document.getElementById('krDetail').style.display='flex'}
+document.getElementById('krAddForm').addEventListener('submit',async e=>{e.preventDefault();let files=Array.from(document.getElementById('krImages').files||[]);if(!files.length)return;let category=document.getElementById('krCategory').value;krCurrentCategory=category;let caption=document.getElementById('krCaption').value.trim();let description=document.getElementById('krDescription').value.trim();let d=krGetData();for(let f of files){let image=await new Promise((resolve,reject)=>{let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(f)});d.items.push({id:'img_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),category,caption:caption||f.name.replace(/\.[^.]+$/,''),description,image})}if(krSaveData(d)){krAddStoredCards();document.getElementById('krManageStatus').textContent='บันทึกรูป '+files.length+' รูปแล้ว';document.getElementById('krImages').value='';document.getElementById('krCaption').value='';document.getElementById('krDescription').value=''}});
+// Make every existing card clickable so visitors can open a detail view.
+document.querySelectorAll('.card').forEach((card,index)=>{card.tabIndex=0;card.setAttribute('role','button');card.addEventListener('click',()=>{let title=card.querySelector('b')?.textContent?.trim()||'รายละเอียด';let img=card.querySelector('img');let detail=document.getElementById('krDetail');document.getElementById('krDetailTitle').textContent=title;document.getElementById('krDetailDescription').textContent='ดูรายละเอียดเพิ่มเติมหรือเพิ่มรูปในหัวข้อนี้ได้จากปุ่มจัดการรูป';let main=document.getElementById('krDetailImage');main.style.display=img?'block':'none';if(img)main.src=img.src;document.getElementById('krDetailGallery').innerHTML='';let sec=card.closest('section');krCurrentCategory=sec?.id||'count';detail.style.display='flex'});card.addEventListener('keydown',e=>{if(e.key==='Enter')card.click()})});
+krAddStoredCards();
 </script>
 </body></html>
